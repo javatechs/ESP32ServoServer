@@ -11,32 +11,36 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include "src/GetIMU.h"
-// SImple packet coms implementation useing WiFi
+// SImple packet coms implementation using WiFi
 UDPSimplePacket coms;
-// WIfi stack managment state machine
+// WIfi stack management state machine
 WifiManager manager;
 //The setup function is called once at startup of the sketch
 String * name = new String("hidDevice");
 Adafruit_BNO055 bno;
 GetIMU * sensor;
+bool imuWorking = false;
 void setup()
 {
 	manager.setupScan();
 	sensor = new GetIMU();
 	Serial.println("Loading with name: "+name[0]);
 
-	//Initialise the sensor
+	//Initialize the sensor
 	if (bno.begin()) {
 		delay(1000);
 		bno.setExtCrystalUse(true);
 		sensor->startSensor(&bno);
+		imuWorking = true;
 	}else{
 		Serial.print(
-				"Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
+				"Oops, no BNO055 detected ... Check your wiring or I2C ADDR!");
 	}
 
 	coms.attach(new NameCheckerServer(name));
-	coms.attach(sensor);
+	if (imuWorking) {
+    coms.attach(sensor);
+	}
 	coms.attach(new ServoServer());
 }
 
