@@ -21,7 +21,7 @@ ServoServer::ServoServer() :PacketEventAbstract(1962){
 	map[10]= 14;
 	map[11]= 27;
 	map[12]= 26;
-	map[13]= 25;
+	map[13]= 21;
 	map[14]= 33;
 	map[15]= 32;
 	firstRun=true;
